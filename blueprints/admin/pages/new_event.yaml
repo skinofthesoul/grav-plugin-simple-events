@@ -1,0 +1,42 @@
+form:
+  validation: loose
+  fields:
+    section:
+        type: section
+        title: PLUGIN_SIMPLE_EVENTS.BUTTON_ADDEVENT
+
+    title:
+      type: text
+      label: PLUGIN_SIMPLE_EVENTS.LABEL_TEXT
+      validate:
+        required: true
+
+    header.link:
+      type: select
+      label: PLUGIN_SIMPLE_EVENTS.LABEL_LINKTOPAGE
+      config-options@: plugins.simple-events.link_options
+
+    header.start:
+      type: date
+      label: PLUGIN_ADMIN.DATE
+      validate:
+        required: true
+
+    header.end:
+      type: date
+      label: PLUGIN_SIMPLE_EVENTS.LABEL_ENDDATE
+
+    folder:
+      type: hidden
+      default: '@slugify-start'
+
+    route:
+      type: hidden
+      default: '/lernen/termine'
+
+    name:
+      type: hidden
+      default: 'event'
+
+    blueprint:
+      type: blueprint

@@ -1,0 +1,17 @@
+en:
+  PLUGIN_SIMPLE_EVENTS:
+    LINK_OPTIONS: Linkable pages
+    NONE: none
+    LABEL_LINKTOPAGE: Link text in [brackets] to
+    LABEL_ENDDATE: End date (optional)
+    BUTTON_ADDEVENT: Add Event
+    LABEL_TEXT: Text
+
+de:
+  PLUGIN_SIMPLE_EVENTS:
+    LINK_OPTIONS: Verlinkbare Seiten
+    NONE: nichts
+    LABEL_LINKTOPAGE: Text in [Klammern] verlinken mit
+    LABEL_ENDDATE: Datum Ende (optional)
+    BUTTON_ADDEVENT: Termin hinzufügen
+    LABEL_TEXT: Text

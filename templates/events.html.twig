@@ -1,0 +1,40 @@
+{% extends 'partials/base.html.twig' %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+    {{ page.content }}
+    {% set events = page.collection({ items: {'@self.children':''}, 'order': {'by': 'start', 'dir': 'asc'}}) %}
+    <ul class="termine">
+    {% for e in events %}
+    {% if e.header.end is defined and e.header.end != e.header.start %}
+      {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
+    {% else %}
+      {% set eventdate = e.header.start|date('M j, Y') %}
+    {% endif %}
+
+    {% if e.header.link is defined %}
+      {% set eventtext = linkit(e.title, e.header.link) %}
+    {% else %}
+      {% set eventtext = e.title %}
+    {% endif %}
+      <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{# customise the date for another language: an example in German #}
+{#
+put this in the for loop (for e in events), replacing the if clause above:
+
+{% if e.header.end is defined and e.header.end != e.header.start %}
+
+  {% if e.header.end|date('j') == e.header.start|date('j') + 1 %}
+  {% set eventdate = e.header.start|date('j.') ~ ' und ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
+  {% else %}
+  {% set eventdate = e.header.start|date('j.') ~ ' bis ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
+  {% endif %}
+{% else %}
+{% set eventdate = e.header.start|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.start|date('n') -1) ~ ' ' ~ e.header.start|date('Y') %}
+{% endif %}
+
+#}

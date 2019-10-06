@@ -1,0 +1,34 @@
+title: Termine
+#'@extends':
+#    type: default
+#    context: blueprints://pages
+
+form:
+  fields:
+    tabs:
+      type: tabs
+      active: 1
+
+      fields:
+        termin:
+          type: tab
+          title: Termin
+
+          fields:
+            header.title:
+              type: text
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_TEXT
+              validate:
+                required: true
+            header.link:
+              type: select
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_LINKTOPAGE
+              config-options@: plugins.simple-events.link_options
+            header.start:
+              type: date
+              label: PLUGIN_ADMIN.DATE
+              validate:
+                required: true
+            header.end:
+              type: date
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_ENDDATE

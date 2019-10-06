@@ -1,0 +1,31 @@
+name: Simple Events
+version: 0.1.0
+description: Add a simple list of events to your site.
+icon: plug
+author:
+  name: Netzhexe.de
+  email: ak@netzhexe.de
+homepage: https://github.com/skinofthesoul/grav-plugin-simple-events
+keywords: grav, plugin, events
+bugs: https://github.com/skinofthesoul/grav-plugin-simple-events/issues
+docs: https://github.com/skinofthesoul/grav-plugin-simple-events/blob/master/README.md
+license: MIT
+
+form:
+  validation: strict
+  fields:
+    enabled:
+      type: toggle
+      label: PLUGIN_ADMIN.PLUGIN_STATUS
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    link_options:
+      type: array
+      label: PLUGIN_SIMPLE_EVENTS.LINK_OPTIONS
+      default:
+        '': '- PLUGIN_SIMPLE_EVENTS.NONE -'
