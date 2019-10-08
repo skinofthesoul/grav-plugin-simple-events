@@ -6,6 +6,9 @@ en:
     LABEL_ENDDATE: End date (optional)
     BUTTON_ADDEVENT: Add Event
     LABEL_TEXT: Text
+    LABEL_CATEGORIES: Categories
+    LABEL_TYPES: Type of event
+    CAT_NO_EVENTS: 'There are currently no events in this category.'
 
 de:
   PLUGIN_SIMPLE_EVENTS:
@@ -15,3 +18,6 @@ de:
     LABEL_ENDDATE: Datum Ende (optional)
     BUTTON_ADDEVENT: Termin hinzufügen
     LABEL_TEXT: Text
+    LABEL_CATEGORIES: Kategorien
+    LABEL_TYPES: Terminart
+    CAT_NO_EVENTS: 'Zur Zeit gibt es keine Termine in dieser Gegend.'

@@ -58,3 +58,7 @@ This plugin was initially sponsored by a German nonprofit organisation. As soon 
 ## To Do
 
 - [ ] add a simple way to create new events in Admin
+- [ ] restructure code into Eventslist class
+- [ ] add option to automatically delete past events
+- [ ] support for categories in events template
+- [ ] support for types in events template

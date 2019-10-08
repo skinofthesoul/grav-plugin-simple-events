@@ -3,23 +3,35 @@
 {% block content %}
     <h1>{{ page.title }}</h1>
     {{ page.content }}
-    {% set events = page.collection({ items: {'@self.children':''}, 'order': {'by': 'start', 'dir': 'asc'}}) %}
-    <ul class="termine">
-    {% for e in events %}
-    {% if e.header.end is defined and e.header.end != e.header.start %}
-      {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
-    {% else %}
-      {% set eventdate = e.header.start|date('M j, Y') %}
-    {% endif %}
+    {#% set cat_counter = 0 %#}
+    {% for cat_id,cat in config.plugins['simple-events'].categories %}
+      <h2 id="{{ cat_id }}">{{ cat }}</h2>
+      <ul class="events">
+      {% set events = page.collection({ 'items': {'@self.children':''}, 'order': {'by': 'start', 'dir': 'asc'}}) %}
+      {% set cat_counter = 0 %}
+      {% for e in events %}
+      {% if e.header.category == cat_id %}
+        {% set cat_counter = cat_counter + 1 %}
+        {{ dump(cat_counter) }}
+        {% if e.header.end is defined and e.header.end != e.header.start %}
+          {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
+        {% else %}
+          {% set eventdate = e.header.start|date('M j, Y') %}
+        {% endif %}
 
-    {% if e.header.link is defined %}
-      {% set eventtext = linkit(e.title, e.header.link) %}
-    {% else %}
-      {% set eventtext = e.title %}
-    {% endif %}
-      <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+        {% if e.header.link is defined %}
+          {% set eventtext = linkit(e.title, e.header.link) %}
+        {% else %}
+          {% set eventtext = e.title %}
+        {% endif %}
+          <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+        {% endif %}
+      {% endfor %}
+      </ul>
+      {% if cat_counter is defined and cat_counter == 0 %}
+        <p>{{ "PLUGIN_SIMPLE_EVENTS.CAT_NO_EVENTS"|t }}</p>
+      {% endif %}
     {% endfor %}
-    </ul>
 {% endblock %}
 
 {# customise the date for another language: an example in German #}
@@ -27,7 +39,6 @@
 put this in the for loop (for e in events), replacing the if clause above:
 
 {% if e.header.end is defined and e.header.end != e.header.start %}
-
   {% if e.header.end|date('j') == e.header.start|date('j') + 1 %}
   {% set eventdate = e.header.start|date('j.') ~ ' und ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
   {% else %}

@@ -1,7 +1,7 @@
 title: Termine
-#'@extends':
-#    type: default
-#    context: blueprints://pages
+'@extends':
+    type: default
+    context: blueprints://pages
 
 form:
   fields:
@@ -32,3 +32,11 @@ form:
             header.end:
               type: date
               label: PLUGIN_SIMPLE_EVENTS.LABEL_ENDDATE
+            header.category:
+              type: select
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_CATEGORIES
+              config-options@: plugins.simple-events.categories
+            header.type:
+              type: select
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_TYPES
+              config-options@: plugins.simple-events.types

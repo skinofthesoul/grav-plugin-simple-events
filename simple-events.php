@@ -89,7 +89,7 @@ class SimpleEventsPlugin extends Plugin
           $addr = $this->grav['base_url'].'/'.$url;
         }
         if(preg_match('/(.*)\[(.*)\](.*)/', $string, $matches)) {
-          $linked = $matches[1].'<a href="'.$addr.'/'.$url.'">'.$matches[2].'</a>'.$matches[3];
+          $linked = $matches[1].'<a href="'.$addr.'">'.$matches[2].'</a>'.$matches[3];
         } else {
           $linked = '<a href="'.$addr.'">'.$string.'</a>';
         }
