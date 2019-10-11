@@ -1,5 +1,5 @@
 name: Simple Events
-version: 1.0.1
+version: 1.1.0
 description: Add a simple list of events to your site.
 icon: plug
 author:
@@ -28,14 +28,17 @@ form:
       type: array
       label: PLUGIN_SIMPLE_EVENTS.LINK_OPTIONS
       default:
-        '': '- PLUGIN_SIMPLE_EVENTS.NONE -'
-    types:
+        '': 'PLUGIN_SIMPLE_EVENTS.NONE'
+    use_regions:
+      label: PLUGIN_SIMPLE_EVENTS.USE_REGIONS
+      type: toggle
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
+    regions:
       type: array
-      label: PLUGIN_SIMPLE_EVENTS.LABEL_TYPES
-      default:
-        '': '- PLUGIN_SIMPLE_EVENTS.NONE -'
-    categories:
-      type: array
-      label: PLUGIN_SIMPLE_EVENTS.LABEL_CATEGORIES
-      default:
-        '': '- PLUGIN_SIMPLE_EVENTS.NONE -'
+      label: PLUGIN_SIMPLE_EVENTS.LABEL_REGIONS

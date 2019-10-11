@@ -32,11 +32,17 @@ form:
             header.end:
               type: date
               label: PLUGIN_SIMPLE_EVENTS.LABEL_ENDDATE
-            header.category:
+            header.region:
               type: select
-              label: PLUGIN_SIMPLE_EVENTS.LABEL_CATEGORIES
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_REGIONS
               config-options@: plugins.simple-events.categories
-            header.type:
-              type: select
-              label: PLUGIN_SIMPLE_EVENTS.LABEL_TYPES
-              config-options@: plugins.simple-events.types
+            header.taxonomy:
+              type: taxonomy
+              label: PLUGIN_ADMIN.TAXONOMY
+              multiple: false
+              validate:
+                type: array
+#            header.type:
+#              type: select
+#              label: PLUGIN_SIMPLE_EVENTS.LABEL_TYPES
+#              config-options@: plugins.simple-events.types

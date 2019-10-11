@@ -1,0 +1,18 @@
+{% set events = page.collection() %}
+
+  <ul class="termine">
+{% for e in events %}
+  {% if e.header.end is defined and e.header.end != e.header.start %}
+    {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
+  {% else %}
+    {% set eventdate = e.header.start|date('M j, Y') %}
+  {% endif %}
+
+  {% if e.header.link is defined %}
+    {% set eventtext = linkit(e.title, e.header.link) %}
+  {% else %}
+    {% set eventtext = e.title %}
+  {% endif %}
+    <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+{% endfor %}
+  </ul>

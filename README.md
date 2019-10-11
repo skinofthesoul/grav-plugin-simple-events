@@ -1,6 +1,6 @@
 # Simple Events Plugin
 
-The **Simple Events** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav). It lets you add a simple list of events to your site.
+The **Simple Events** Plugin is an extension for [Grav CMS](http://github.com/getgrav/grav). It lets you add a simple list of events to your site. If you'd like something more advanced, check out the [Events plugin](https://github.com/pikim/grav-plugin-events) which has a calendar, geolocation, options for repeating events and more. This plugin really is for a simple list of events with no extra pages for them, and all added manually.
 
 ## Installation
 
@@ -40,7 +40,19 @@ Note that if you use the Admin Plugin, a file with your configuration named simp
 
 ## Usage
 
-Once the plugin is enabled, you have two extra template options: `Events` and `Event`. Create a new page that you want to display your events list on, and give it the template `Events`. Then create child pages with the template `Event`, and they will automatically be listed on the parent page.
+Once the plugin is enabled, you have two extra template options: `Events` and `Event`. Create a new page that you want to display your events list on, and give it the template `Events`. Then create child pages with the template `Event`, define a collection in the frontmatter of the parent page and they will automatically be listed on the parent page.
+
+A simple frontmatter collection example:
+``` yaml
+content:
+    items: '@self.children'
+    order:
+        by: header.start
+        dir: asc
+    filter:
+      published: true
+      type: 'event'
+```
 
 ### Changing the appearance
 You can (and probably want to) modify the appearance of the list by copying
@@ -49,7 +61,37 @@ You can (and probably want to) modify the appearance of the list by copying
 ### Optional fields: end dates and links
 If you just want a very simple list of events, the end date and link fields of the `Event` page type are completely optional.
 
-If you wish to be able to link your event text or a part of it to another page or another website via Admin, make a list of available links under the plugin's configuration options. You can then put part of your event text in square brackets [] and select what you wish to link this to. (This is an option I made for my clients, if you can create links in all the regular ways, you will likely not need this.)
+If you wish to be able to link your event text or a part of it to another page or another website via Admin, make a list of available links under the plugin's configuration options or in the config file like so:
+
+``` yaml
+link_options:
+  0: '- nothing -'
+  'path/to/page': 'Example'
+  'http://www.example.com': 'External example'
+```
+
+You can then put part of your event text in square brackets [] and select what you wish to link this to. (This is an option I made for my clients, if you can create links in all the regular ways, you will likely not need this.)
+
+### More options
+You can sort your events into regions if you like: just create a list of regions in the plugin settings and enable the regions (if you use the Admin plugin), or put an array into your `user/config/plugins/simple-events.yaml` like so:
+
+``` yaml
+regions:
+  london: 'London Area'
+  paris: 'Paris and surroundings'
+  germany: 'Somewhere in the backwaters of Germany'
+use_regions: true
+```
+
+Then select add one of these to each of your events. Whatever you have put as the region's name will appear as a headline in between your list of events, and they will be sorted by how you sorted that list of regions.
+
+### List of events as a block somewhere
+If you'd like to put a list of events as part of a page somewhere, do the following:
+- add a collection to that page of the events you'd like to list
+- then put `{% include 'partials/eventslist.html.twig' %}` wherever you would like the list to appear
+- do any customisations in a copy of that file and put that in your theme's `templates/partials` folder
+
+You can also add taxonomy tags to your events and then use them in the page collection as a filter, for example if you have different types of events.
 
 ## Credits
 
@@ -57,8 +99,7 @@ This plugin was initially sponsored by a German nonprofit organisation. As soon 
 
 ## To Do
 
-- [ ] add a simple way to create new events in Admin
-- [ ] restructure code into Eventslist class
-- [ ] add option to automatically delete past events
-- [ ] support for categories in events template
-- [ ] support for types in events template
+- [ ] add option to delete past events (or do it automatically)
+- [ ] maybe add a simpler way to create new events in Admin
+- [x] support for categories in events template
+- [x] support for types in events template

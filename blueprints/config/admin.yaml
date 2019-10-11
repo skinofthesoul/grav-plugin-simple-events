@@ -1,5 +1,0 @@
-add_modals:
-  -
-    label: PLUGIN_SIMPLE_EVENTS.BUTTON_ADDEVENT
-    blueprint: admin/pages/new_event
-    show_in: dropdown

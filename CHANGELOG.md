@@ -1,3 +1,14 @@
+# v1.1.0
+##  10/11/2019
+
+1. [](#new)
+    * support for regions in the templates
+    * new block template `partials/eventslist.html.twig` for easy inclusion a smaller list anywhere
+2. [](#improved)
+    * took types out again, better done with taxonomy
+    * renamed categories to regions to avoid misunderstandings with taxonomy
+    * massively extended README.md
+
 # v1.0.1
 ##  10/08/2019
 
