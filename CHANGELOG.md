@@ -1,8 +1,17 @@
+# v1.1.3
+##  11/04/2019
+
+1. [](#bugfix)
+    * corrections in changelog for last version number
+
 # v1.1.2
-##  10/11/2019
+##  11/04/2019
 
 1. [](#improved)
     * changed templates to list future events only
+2. [](#bugfix)
+    * don't link events if no url is passed to the function
+
 
 # v1.1.1
 ##  10/11/2019
