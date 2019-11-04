@@ -1,3 +1,9 @@
+# v1.1.2
+##  10/11/2019
+
+1. [](#improved)
+    * changed templates to list future events only
+
 # v1.1.1
 ##  10/11/2019
 

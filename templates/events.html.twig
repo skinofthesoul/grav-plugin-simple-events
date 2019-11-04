@@ -10,6 +10,7 @@
       {% set events = page.collection() %}
       {% set reg_counter = 0 %}
       {% for e in events %}
+      {% if date(e.header.start) > date()  %}
       {% if e.header.region == reg_id %}
         {% set reg_counter = reg_counter + 1 %}
         {% if e.header.end is defined and e.header.end != e.header.start %}
@@ -30,11 +31,13 @@
       {% if reg_counter is defined and reg_counter > 0 %}
         {{ eventsstring }}
       {% endif %}
+      {% endif %}
     {% endfor %}
 {% else %}
     <ul class="events">
     {% set events = page.collection() %}
     {% for e in events %}
+      {% if date(e.header.start) > date()  %}
       {% if e.header.end is defined and e.header.end != e.header.start %}
         {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
       {% else %}
@@ -47,6 +50,7 @@
         {% set eventtext = e.title %}
       {% endif %}
       <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+      {% endif %}
       {% endfor %}
     </ul>
 {% endif %}
@@ -59,9 +63,14 @@ put this in the for loop (for e in events), replacing the if clause above:
 
 {% if e.header.end is defined and e.header.end != e.header.start %}
   {% if e.header.end|date('j') == e.header.start|date('j') + 1 %}
-  {% set eventdate = e.header.start|date('j.') ~ ' und ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
-  {% else %}
-  {% set eventdate = e.header.start|date('j.') ~ ' bis ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
+    {% set month ="" %}
+    {% if e.header.end|date('m') != e.header.start|date('m') %}
+      {% set month = ' ' ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.start|date('n') -1) %}
+    {% endif %}
+    {% if e.header.end|date('j') == e.header.start|date('j') + 1 %}
+    {% set eventdate = e.header.start|date('j.') ~ month ~ ' und ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
+    {% else %}
+    {% set eventdate = e.header.start|date('j.') ~ month ~ ' bis ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
   {% endif %}
 {% else %}
 {% set eventdate = e.header.start|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.start|date('n') -1) ~ ' ' ~ e.header.start|date('Y') %}

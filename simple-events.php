@@ -83,6 +83,7 @@ class SimpleEventsPlugin extends Plugin
      */
     public function linkIt($string, $url)
     {
+      if ($url) {
         if (substr($url, 0, 4) == "http") {
           $addr = $url;
         } else {
@@ -94,5 +95,8 @@ class SimpleEventsPlugin extends Plugin
           $linked = '<a href="'.$addr.'">'.$string.'</a>';
         }
         return $linked;
+      } else {
+        return $string;
+      }
     }
 }

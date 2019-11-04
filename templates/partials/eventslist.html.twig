@@ -2,6 +2,7 @@
 
   <ul class="termine">
 {% for e in events %}
+{% if date(e.header.start) > date()  %}
   {% if e.header.end is defined and e.header.end != e.header.start %}
     {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
   {% else %}
@@ -14,5 +15,6 @@
     {% set eventtext = e.title %}
   {% endif %}
     <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+  {% endif %}
 {% endfor %}
   </ul>
