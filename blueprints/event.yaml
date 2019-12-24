@@ -20,10 +20,14 @@ form:
               label: PLUGIN_SIMPLE_EVENTS.LABEL_TEXT
               validate:
                 required: true
-            header.link:
-              type: select
-              label: PLUGIN_SIMPLE_EVENTS.LABEL_LINKTOPAGE
-              config-options@: plugins.simple-events.link_options
+            opt-links:
+              type: conditional
+              condition: config.plugins['simple-events'].use_links
+              fields:
+                header.link:
+                  type: select
+                  label: PLUGIN_SIMPLE_EVENTS.LABEL_LINKTOPAGE
+                  config-options@: plugins.simple-events.link_options
             header.start:
               type: date
               label: PLUGIN_ADMIN.DATE
@@ -32,17 +36,24 @@ form:
             header.end:
               type: date
               label: PLUGIN_SIMPLE_EVENTS.LABEL_ENDDATE
-            header.region:
-              type: select
-              label: PLUGIN_SIMPLE_EVENTS.LABEL_REGIONS
-              config-options@: plugins.simple-events.categories
+            opt-location:
+              type: conditional
+              condition: config.plugins['simple-events'].use_location
+              fields:
+                header.location:
+                  type: text
+                  label: PLUGIN_SIMPLE_EVENTS.LABEL_LOCATION
+            opt-region:
+              type: conditional
+              condition: config.plugins['simple-events'].use_regions
+              fields:
+                header.region:
+                  type: select
+                  label: PLUGIN_SIMPLE_EVENTS.LABEL_REGIONS
+                  config-options@: plugins.simple-events.regions
             header.taxonomy:
               type: taxonomy
               label: PLUGIN_ADMIN.TAXONOMY
               multiple: false
               validate:
                 type: array
-#            header.type:
-#              type: select
-#              label: PLUGIN_SIMPLE_EVENTS.LABEL_TYPES
-#              config-options@: plugins.simple-events.types

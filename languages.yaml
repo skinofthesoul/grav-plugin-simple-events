@@ -1,5 +1,9 @@
 en:
   PLUGIN_SIMPLE_EVENTS:
+    DELETE_OLD: Delete past events automatically
+    USE_LOCATION: Show location field
+    LABEL_LOCATION: Location
+    USE_LINKS: Use links
     LINK_OPTIONS: Linkable pages
     NONE: none
     LABEL_LINKTOPAGE: Link text in [brackets] to
@@ -12,6 +16,10 @@ en:
 
 de:
   PLUGIN_SIMPLE_EVENTS:
+    DELETE_OLD: Vergangene Termine automatisch löschen
+    USE_LOCATION: Feld für Veranstaltungsort zeigen
+    LABEL_LOCATION: Veranstaltungsort
+    USE_LINKS: Links verwenden
     LINK_OPTIONS: Verlinkbare Seiten
     NONE: nichts
     LABEL_LINKTOPAGE: Text in [Klammern] verlinken mit
