@@ -10,34 +10,31 @@
       {% set events = page.collection() %}
       {% set reg_counter = 0 %}
       {% for e in events %}
-      {% if date(e.header.start) > date()  %}
-      {% if e.header.region == reg_id %}
-        {% set reg_counter = reg_counter + 1 %}
-        {% if e.header.end is defined and e.header.end != e.header.start %}
-          {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
-        {% else %}
-          {% set eventdate = e.header.start|date('M j, Y') %}
-        {% endif %}
+          {% if e.header.region == reg_id %}
+            {% set reg_counter = reg_counter + 1 %}
+            {% if e.header.end is defined and e.header.end != e.header.start %}
+              {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
+            {% else %}
+              {% set eventdate = e.header.start|date('M j, Y') %}
+            {% endif %}
 
-        {% if e.header.link is defined %}
-          {% set eventtext = linkit(e.title, e.header.link) %}
-        {% else %}
-          {% set eventtext = e.title %}
-        {% endif %}
-          {% set eventsstring = eventsstring ~ '<li><span class="eventdate">' ~ eventdate ~ '</span>' ~ eventtext ~ '</li>' %}
-        {% endif %}
+            {% if e.header.link is defined %}
+              {% set eventtext = linkit(e.title, e.header.link) %}
+            {% else %}
+              {% set eventtext = e.title %}
+            {% endif %}
+            {% set eventsstring = eventsstring ~ '<li><span class="eventdate">' ~ eventdate ~ '</span>' ~ eventtext ~ '</li>' %}
+          {% endif %}
       {% endfor %}
       {% set eventsstring = eventsstring ~ '</ul>' %}
       {% if reg_counter is defined and reg_counter > 0 %}
         {{ eventsstring }}
-      {% endif %}
       {% endif %}
     {% endfor %}
 {% else %}
     <ul class="events">
     {% set events = page.collection() %}
     {% for e in events %}
-      {% if date(e.header.start) > date()  %}
       {% if e.header.end is defined and e.header.end != e.header.start %}
         {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
       {% else %}
@@ -50,7 +47,6 @@
         {% set eventtext = e.title %}
       {% endif %}
       <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
-      {% endif %}
       {% endfor %}
     </ul>
 {% endif %}

@@ -1,3 +1,15 @@
+# v1.2
+##  12/24/2019
+
+1. [](#improved)
+    * both links and regions are now fully optional, meaning that if you disable them in the plugin settings, you won't see those fields in the admin interface
+    * updated README file
+2. [](#new)
+    * added an optional location field for more styling options in your templates
+    * added an option to automatically delete past events
+3.[](#bugfix)
+    * fixed a buggy if clause in `events.html.twig`
+
 # v1.1.3
 ##  11/04/2019
 

@@ -1,6 +1,10 @@
 en:
   PLUGIN_SIMPLE_EVENTS:
     DELETE_OLD: Delete past events automatically
+    UNPUBLISH_DAY: On which day to unpublish an event
+    LABEL_START: start day
+    LABEL_END: end day (if given)
+    UNPUBLISH_TIME: At what time to unpublish an event
     USE_LOCATION: Show location field
     LABEL_LOCATION: Location
     USE_LINKS: Use links
@@ -17,6 +21,10 @@ en:
 de:
   PLUGIN_SIMPLE_EVENTS:
     DELETE_OLD: Vergangene Termine automatisch löschen
+    UNPUBLISH_DAY: An welchem Tag werden Termine aus der Liste genommen
+    LABEL_START: Starttag
+    LABEL_END: Endtag (sofern angegeben)
+    UNPUBLISH_TIME: Zu welcher Zeit werden Termine aus der Liste genommen
     USE_LOCATION: Feld für Veranstaltungsort zeigen
     LABEL_LOCATION: Veranstaltungsort
     USE_LINKS: Links verwenden

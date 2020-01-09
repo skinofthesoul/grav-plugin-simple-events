@@ -3,6 +3,9 @@ namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
 use Grav\Common\Grav;
+use Grav\Common\Page\Page;
+use Grav\Common\Page\Collection;
+use Grav\Common\Filesystem\Folder;
 use RocketTheme\Toolbox\Event\Event;
 
 /**
@@ -11,6 +14,8 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class SimpleEventsPlugin extends Plugin
 {
+    protected $clearEvents = false;
+    protected $checkUnpublishedDates = false;
     /**
      * @return array
      *
@@ -35,13 +40,17 @@ class SimpleEventsPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-        // Don't proceed if we are in the admin plugin
-        if ($this->isAdmin()) {
-            return;
-        }
+      if ( $this->isAdmin() ) {
+          // enable the save event so past events can be deleted
+          $this->enable([
+            //'onAdminSave'        => ['onAdminSave', 0]
+          ]);
+  		}
 
         // Enable the main event we are interested in
         $this->enable([
+            'onBuildPagesInitialized' => ['onBuildPagesInitialized', 0],
+            'onPagesInitialized' => ['onPagesInitialized', 0],
             'onTwigInitialized' => ['onTwigInitialized', 0]
         ]);
     }
@@ -98,5 +107,48 @@ class SimpleEventsPlugin extends Plugin
       } else {
         return $string;
       }
+    }
+
+    /*** cleanup on cache rebuild contributed by paamtbau@Grav discourse <3 ***/
+    /** Cleanup up expired events when page collection has been build */
+    public function onPagesInitialized()
+    {
+      if ($this->grav['config']->plugins['simple-events']['delete_old']) {
+        if ($this->clearEvents) {
+          $pages = $this->grav['pages'];
+          //dump($pages->all()->ofType('event')->nonPublished()); exit;
+          $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
+
+          foreach($unpublishedEvents as $event) {
+            Folder::delete($event->path()); // !! may not work for multilang!!
+          }
+        }
+      }
+
+      if ($this->checkUnpublishedDates) {
+        // set unpublish datetime to header.start/header.end plus time set in options.
+        $pages = $this->grav['pages'];
+        $events = $pages->all()->ofType('event');
+
+        foreach($events as $e) {
+          //dump($e->file()); exit;
+          if (!$e->unpublishDate()) {
+            $time = " 0:00";
+            if (!empty($this->grav['config']->plugins['simple-events']['unpublish_time'])) {
+              $time = " ".$this->grav['config']->plugins['simple-events']['unpublish_time'];
+            }
+            $datetime = $e->header()->start.$time;
+            $e->unpublishDate($datetime);
+            $e->save();
+          }
+        }
+      }
+    }
+
+    /** Fired when Grav needs to refresh/build the cache */
+    public function onBuildPagesInitialized()
+    {
+        $this->clearEvents = true;
+        $this->checkUnpublishedDates = true;
     }
 }

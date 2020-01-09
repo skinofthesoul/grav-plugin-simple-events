@@ -34,6 +34,11 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
+delete_old: false # enable to delete past events automatically
+use_location: false # shows an extra text field in admin for use in templates
+use_links: false # turn on options in admin to add a link to (part of) the title
+use_regions: false # enable to group events in the list by regions
+# see below on how to configure links and regions
 ```
 
 Note that if you use the Admin Plugin, a file with your configuration named simple-events.yaml will be saved in the `user/config/plugins/`-folder once the configuration is saved in the Admin.
@@ -58,9 +63,10 @@ content:
 You can (and probably want to) modify the appearance of the list by copying
 `user/plugins/simple-events/templates/events.html.twig` to `[theme folder]/templates/events.html.twig`, and then making any changes in that copy. I have included some code to help with making the dates multilingual, if you can't make something work, feel free to create am issue for the plugin!
 
-### Optional fields: end dates and links
-If you just want a very simple list of events, the end date and link fields of the `Event` page type are completely optional.
+### Optional fields: end dates, regions, location and links
+If you just want a very simple list of events, the end date, regions, location and link fields of the `Event` page type are completely optional. If you would like to use any of these, turn them on in the plugin options (see above). The location field is really just a text field that you can use for any information you'd like to style differently in your template, it does not have to be a location (but this is likely to see a lot of use). For links and regions, additional configuration is needed.
 
+### Configuring links
 If you wish to be able to link your event text or a part of it to another page or another website via Admin, make a list of available links under the plugin's configuration options or in the config file like so:
 
 ``` yaml
@@ -72,23 +78,24 @@ link_options:
 
 You can then put part of your event text in square brackets [] and select what you wish to link this to. (This is an option I made for my clients, if you can create links in all the regular ways, you will likely not need this.)
 
-### More options
+### Configuring regions
 You can sort your events into regions if you like: just create a list of regions in the plugin settings and enable the regions (if you use the Admin plugin), or put an array into your `user/config/plugins/simple-events.yaml` like so:
 
 ``` yaml
 regions:
-  london: 'London Area'
+  london: 'London area'
   paris: 'Paris and surroundings'
   germany: 'Somewhere in the backwaters of Germany'
 use_regions: true
 ```
 
-Then select add one of these to each of your events. Whatever you have put as the region's name will appear as a headline in between your list of events, and they will be sorted by how you sorted that list of regions.
+Then add one of these to each of your events, either via the Admin interface or by putting `region: paris` or similar in the event page frontmatter. Whatever you have put as the region's name will appear as a headline in between your list of events, and they will be sorted by how you sorted that list of regions.
 
 ### List of events as a block somewhere
 If you'd like to put a list of events as part of a page somewhere, do the following:
-- add a collection to that page of the events you'd like to list
+- add a collection of the events you'd like to list to that page's frontmatter
 - then put `{% include 'partials/eventslist.html.twig' %}` wherever you would like the list to appear
+- set `process: twig: true` for that page (in the Advanced tab in Admin)
 - do any customisations in a copy of that file and put that in your theme's `templates/partials` folder
 
 You can also add taxonomy tags to your events and then use them in the page collection as a filter, for example if you have different types of events.
