@@ -157,7 +157,7 @@ class SimpleEventsPlugin extends Plugin
     /** Fired when Grav needs to refresh/build the cache */
     public function onBuildPagesInitialized()
     {
-        //$this->clearEvents = true;
-        //$this->checkUnpublishedDates = true;
+        $this->clearEvents = true;
+        $this->checkUnpublishedDates = true;
     }
 }

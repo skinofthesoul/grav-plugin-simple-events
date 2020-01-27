@@ -34,17 +34,17 @@ form:
         0: PLUGIN_ADMIN.NO
       validate:
         type: bool
-    #unpublish_day:
-      #label: PLUGIN_SIMPLE_EVENTS.UNPUBLISH_DAY
-      #type: radio
-      #default: start
-      #options:
-        #start: PLUGIN_SIMPLE_EVENTS.LABEL_START
-        #end: PLUGIN_SIMPLE_EVENTS.LABEL_END
-    #unpublish_time:
-      #label: PLUGIN_SIMPLE_EVENTS.UNPUBLISH_TIME
-      #type: text
-      #default: 0:00
+    unpublish_day:
+      label: PLUGIN_SIMPLE_EVENTS.UNPUBLISH_DAY
+      type: radio
+      default: start
+      options:
+        start: PLUGIN_SIMPLE_EVENTS.LABEL_START
+        end: PLUGIN_SIMPLE_EVENTS.LABEL_END
+    unpublish_time:
+      label: PLUGIN_SIMPLE_EVENTS.UNPUBLISH_TIME
+      type: text
+      default: 0:00
     use_location:
       label: PLUGIN_SIMPLE_EVENTS.USE_LOCATION
       type: toggle

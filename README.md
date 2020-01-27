@@ -34,6 +34,7 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
+delete_old: false # enable to delete past events automatically
 use_location: false # shows an extra text field in admin for use in templates
 use_links: false # turn on options in admin to add a link to (part of) the title
 use_regions: false # enable to group events in the list by regions
