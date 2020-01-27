@@ -113,13 +113,14 @@ class SimpleEventsPlugin extends Plugin
     /** Cleanup up expired events when page collection has been build */
     public function onPagesInitialized()
     {
-      if ($this->grav['config']->plugins['simple-events']['delete_old']) {
+      if ($this->grav['config']->plugins['simple-events']['delete_old'] ?? false) {
         if ($this->clearEvents) {
           $pages = $this->grav['pages'];
-          //dump($pages->all()->ofType('event')->nonPublished()); exit;
           $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
+          //dump($pages->all()->ofType('event')->nonPublished()); exit;
 
           foreach($unpublishedEvents as $event) {
+            dump($event->path());
             Folder::delete($event->path()); // !! may not work for multilang!!
           }
         }
@@ -128,17 +129,25 @@ class SimpleEventsPlugin extends Plugin
       if ($this->checkUnpublishedDates) {
         // set unpublish datetime to header.start/header.end plus time set in options.
         $pages = $this->grav['pages'];
-        $events = $pages->all()->ofType('event');
+        $events = $pages->all()->ofType('event')->order('header.start');
 
         foreach($events as $e) {
-          //dump($e->file()); exit;
           if (!$e->unpublishDate()) {
+            $header_old = $e->header();
+            // check if header.start is timestamp (int) or time string
+            $start = $header_old->start;
+            if (is_int($start)) {
+              $start = date("Y-m-d", $start);
+            }
+
             $time = " 0:00";
             if (!empty($this->grav['config']->plugins['simple-events']['unpublish_time'])) {
               $time = " ".$this->grav['config']->plugins['simple-events']['unpublish_time'];
             }
-            $datetime = $e->header()->start.$time;
+
+            $datetime = $start.$time;
             $e->unpublishDate($datetime);
+            //dump($e->file());
             $e->save();
           }
         }
@@ -148,7 +157,7 @@ class SimpleEventsPlugin extends Plugin
     /** Fired when Grav needs to refresh/build the cache */
     public function onBuildPagesInitialized()
     {
-        $this->clearEvents = true;
-        $this->checkUnpublishedDates = true;
+        //$this->clearEvents = true;
+        //$this->checkUnpublishedDates = true;
     }
 }

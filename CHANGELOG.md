@@ -1,3 +1,8 @@
+# v1.2.1
+##  01/27/2020
+1. [](#bugfix)
+    * fixed the code to make it fully usable again, and established a developing branch for learning by trial and error – my apologies to everyone who had problems with the plugin in the last weeks!
+
 # v1.2
 ##  12/24/2019
 
