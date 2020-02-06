@@ -113,31 +113,20 @@ class SimpleEventsPlugin extends Plugin
     /** Cleanup up expired events when page collection has been build */
     public function onPagesInitialized()
     {
-      if ($this->grav['config']->plugins['simple-events']['delete_old'] ?? false) {
-        if ($this->clearEvents) {
-          $pages = $this->grav['pages'];
-          $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
-          //dump($pages->all()->ofType('event')->nonPublished()); exit;
-
-          foreach($unpublishedEvents as $event) {
-            dump($event->path());
-            Folder::delete($event->path()); // !! may not work for multilang!!
-          }
-        }
-      }
-
       if ($this->checkUnpublishedDates) {
         // set unpublish datetime to header.start/header.end plus time set in options.
         $pages = $this->grav['pages'];
         $events = $pages->all()->ofType('event')->order('header.start');
 
         foreach($events as $e) {
-          if (!$e->unpublishDate()) {
             $header_old = $e->header();
             // check if header.start is timestamp (int) or time string
             $start = $header_old->start;
             if (is_int($start)) {
-              $start = date("Y-m-d", $start);
+              $start = date("d-m-Y", $start);
+            } else {
+              $tmp = strtotime($start);
+              $start = date("d-m-Y", $tmp);
             }
 
             $time = " 0:00";
@@ -146,9 +135,19 @@ class SimpleEventsPlugin extends Plugin
             }
 
             $datetime = $start.$time;
-            $e->unpublishDate($datetime);
-            //dump($e->file());
+            $e->modifyHeader('unpublish_date', $datetime);
             $e->save();
+        }
+      }
+
+      if ($this->grav['config']->plugins['simple-events']['delete_old'] ?? false) {
+        // clear out past events
+        if ($this->clearEvents) {
+          $pages = $this->grav['pages'];
+          $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
+
+          foreach($unpublishedEvents as $event) {
+            Folder::delete($event->path()); // !! may not work for multilang!!
           }
         }
       }
