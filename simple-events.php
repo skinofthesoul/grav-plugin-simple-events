@@ -129,7 +129,6 @@ class SimpleEventsPlugin extends Plugin
         return $collection;
     }
 
-    /*** cleanup on cache rebuild contributed by paamtbau@Grav discourse <3 ***/
     /** Cleanup up expired events when page collection has been build */
     public function onPagesInitialized()
     {
@@ -138,6 +137,7 @@ class SimpleEventsPlugin extends Plugin
             $events = $pages->all()->ofType('event')->order('header.simple-events.start');
 
             foreach ($events as $event) {
+                // Header must be copied before any other operation
                 $header = (array) $event->header();
 
                 $config = $this->mergeConfig($event);
