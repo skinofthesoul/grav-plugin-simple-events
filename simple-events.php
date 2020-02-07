@@ -1,4 +1,5 @@
 <?php
+
 namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
@@ -40,12 +41,12 @@ class SimpleEventsPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
-      if ( $this->isAdmin() ) {
-          // enable the save event so past events can be deleted
-          $this->enable([
-            //'onAdminSave'        => ['onAdminSave', 0]
-          ]);
-  		}
+        if ($this->isAdmin()) {
+            // enable the save event so past events can be deleted
+            $this->enable([
+                //'onAdminSave'        => ['onAdminSave', 0]
+            ]);
+        }
 
         // Enable the main event we are interested in
         $this->enable([
@@ -92,71 +93,75 @@ class SimpleEventsPlugin extends Plugin
      */
     public function linkIt($string, $url)
     {
-      if ($url) {
-        if (substr($url, 0, 4) == "http") {
-          $addr = $url;
+        if ($url) {
+            if (substr($url, 0, 4) == "http") {
+                $addr = $url;
+            } else {
+                $addr = $this->grav['base_url'] . '/' . $url;
+            }
+            if (preg_match('/(.*)\[(.*)\](.*)/', $string, $matches)) {
+                $linked = $matches[1] . '<a href="' . $addr . '">' . $matches[2] . '</a>' . $matches[3];
+            } else {
+                $linked = '<a href="' . $addr . '">' . $string . '</a>';
+            }
+            return $linked;
         } else {
-          $addr = $this->grav['base_url'].'/'.$url;
+            return $string;
         }
-        if(preg_match('/(.*)\[(.*)\](.*)/', $string, $matches)) {
-          $linked = $matches[1].'<a href="'.$addr.'">'.$matches[2].'</a>'.$matches[3];
-        } else {
-          $linked = '<a href="'.$addr.'">'.$string.'</a>';
-        }
-        return $linked;
-      } else {
-        return $string;
-      }
     }
 
     /*** cleanup on cache rebuild contributed by paamtbau@Grav discourse <3 ***/
     /** Cleanup up expired events when page collection has been build */
     public function onPagesInitialized()
     {
-      if ($this->checkUnpublishedDates) {
-        // set unpublish datetime to header.start/header.end plus time set in options.
-        $pages = $this->grav['pages'];
-        $events = $pages->all()->ofType('event')->order('header.start');
+        if ($this->checkUnpublishedDates) {
+            $pages = $this->grav['pages'];
+            $events = $pages->all()->ofType('event')->order('header.simple-events.start');
 
-        foreach($events as $e) {
-            $header_old = $e->header();
-            // check if header.start is timestamp (int) or time string
-            $start = $header_old->start;
-            if (is_int($start)) {
-              $start = date("d-m-Y", $start);
-            } else {
-              $tmp = strtotime($start);
-              $start = date("d-m-Y", $tmp);
+            foreach ($events as $event) {
+                $header = (array) $event->header();
+
+                $config = $this->mergeConfig($event);
+                $unpublishDay = $config->get('unpublish_day') ?? 'start';
+                $endTime = $config->get($unpublishDay);
+
+                if (is_int($endTime)) {
+                    $endTime = date('Y-m-d', $endTime);
+                } else {
+                    $tmp = strtotime($endTime);
+                    $endTime = date('Y-m-d', $tmp);
+                }
+
+                if (!empty($config->get('unpublish_time'))) {
+                    $endTime = $endTime . ' ' . $config->get('unpublish_time');
+                }
+
+                if ($header['unpublish_date'] !== $endTime) {
+                    $header['unpublish_date'] = $endTime;
+                    $event->header($header);
+                    $event->published(new \DateTime('now') <= new \DateTime($endTime));
+                    $event->save();
+                }
             }
+        }
 
-            $time = " 0:00";
-            if (!empty($this->grav['config']->plugins['simple-events']['unpublish_time'])) {
-              $time = " ".$this->grav['config']->plugins['simple-events']['unpublish_time'];
+        if ($this->grav['config']->get('plugins.simple-events.delete_old') ?? false) {
+            // clear out past events
+            if ($this->clearEvents) {
+                $pages = $this->grav['pages'];
+                $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
+
+                foreach ($unpublishedEvents as $event) {
+                    Folder::delete($event->path()); // !! may not work for multilang!!
+                }
             }
-
-            $datetime = $start.$time;
-            $e->modifyHeader('unpublish_date', $datetime);
-            $e->save();
         }
-      }
-
-      if ($this->grav['config']->plugins['simple-events']['delete_old'] ?? false) {
-        // clear out past events
-        if ($this->clearEvents) {
-          $pages = $this->grav['pages'];
-          $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
-
-          foreach($unpublishedEvents as $event) {
-            Folder::delete($event->path()); // !! may not work for multilang!!
-          }
-        }
-      }
     }
 
     /** Fired when Grav needs to refresh/build the cache */
     public function onBuildPagesInitialized()
     {
-        $this->clearEvents = true;
+        // $this->clearEvents = true;
         $this->checkUnpublishedDates = true;
     }
 }
