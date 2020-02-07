@@ -1,20 +1,23 @@
 {% set events = page.collection() %}
 
-  <ul class="termine">
-{% for e in events %}
-{% if date(e.header.start) > date()  %}
-  {% if e.header.end is defined and e.header.end != e.header.start %}
-    {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
-  {% else %}
-    {% set eventdate = e.header.start|date('M j, Y') %}
-  {% endif %}
+<ul class="termine">
+  {% for event in events %}
+    {% config = attribute(event.header, 'simple-events') %}
 
-  {% if e.header.link is defined %}
-    {% set eventtext = linkit(e.title, e.header.link) %}
-  {% else %}
-    {% set eventtext = e.title %}
-  {% endif %}
-    <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
-  {% endif %}
-{% endfor %}
-  </ul>
+    {% if date(config.start) > date() %}
+      {% if config.end is defined and config.end != config.start %}
+        {% set eventdate = config.start|date('M j') ~ ' – ' ~ config.end|date('M j, Y') %}
+      {% else %}
+        {% set eventdate = config.start|date('M j, Y') %}
+      {% endif %}
+
+      {% if config.link is defined %}
+        {% set eventtext = linkit(event.title, config.link) %}
+      {% else %}
+        {% set eventtext = event.title %}
+      {% endif %}
+
+      <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+    {% endif %}
+  {% endfor %}
+</ul>
