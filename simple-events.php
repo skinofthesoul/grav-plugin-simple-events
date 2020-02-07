@@ -155,7 +155,7 @@ class SimpleEventsPlugin extends Plugin
                     $endTime = $endTime . ' ' . $config->get('unpublish_time');
                 }
 
-                if ($header['unpublish_date'] !== $endTime) {
+                if (!isset($header['unpublish_date']) || $header['unpublish_date'] !== $endTime) {
                     $header['unpublish_date'] = $endTime;
                     $event->header($header);
                     $event->published(new \DateTime('now') <= new \DateTime($endTime));
