@@ -86,6 +86,9 @@ class SimpleEventsPlugin extends Plugin
         $this->grav['twig']->twig()->addFunction(
             new \Twig_SimpleFunction('linkit', [$this, 'linkIt'])
         );
+        $this->grav['twig']->twig()->addFilter(
+            new \Twig_SimpleFilter('filterEvents', [$this, 'filterEvents'])
+        );
     }
 
     /**
@@ -108,6 +111,22 @@ class SimpleEventsPlugin extends Plugin
         } else {
             return $string;
         }
+    }
+
+    public function filterEvents(Collection $collection, string $filterRegion)
+    {
+        $collection->filter(function ($slug, $path) use ($collection, $filterRegion) {
+            $event = $collection[$path];
+            $header = (array) $event->header();
+
+            if ($event && !empty($header['simple-events']['region'])) {
+                return $filterRegion === $header['simple-events']['region'];
+            } else {
+                return false;
+            }
+        });
+
+        return $collection;
     }
 
     /*** cleanup on cache rebuild contributed by paamtbau@Grav discourse <3 ***/

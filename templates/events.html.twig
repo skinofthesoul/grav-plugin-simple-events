@@ -7,36 +7,33 @@
     {% if config.plugins['simple-events'].use_regions %}
 
       {% for reg_id, reg in config.plugins['simple-events'].regions %}
-        {% set eventsstring = '<h2 id="' ~ reg_id ~ '">' ~ reg ~ '</h2>' %}
-        {% set eventsstring = eventsstring ~ '<ul class="events">' %}
-        {% set events = page.collection() %}
-        {% set reg_counter = 0 %}
+        {% set events = page.collection | filterEvents(reg_id) %}
 
-        {% for event in events %}
+        {% if events.count > 0 %}
+          <h2 id="{{ reg_id }}">{{ reg }}</h2>
+          <ul class="events">
+
+          {% for event in events %}
             {% set config = attribute(event.header, 'simple-events') %}
 
-            {% if config.region == reg_id %}
-              {% set reg_counter = reg_counter + 1 %}
-
-              {% if config.end is defined and config.end != config.start %}
-                {% set eventdate = config.start|date('M j') ~ ' – ' ~ config.end|date('M j, Y') %}
-              {% else %}
-                {% set eventdate = config.start|date('M j, Y') %}
-              {% endif %}
-
-              {% if config.link is defined %}
-                {% set eventtext = linkit(event.title, config.link) %}
-              {% else %}
-                {% set eventtext = event.title %}
-              {% endif %}
-
-              {% set eventsstring = eventsstring ~ '<li><span class="eventdate">' ~ eventdate ~ '</span>' ~ eventtext ~ '</li>' %}
+            {% if config.end is defined and config.end != config.start %}
+              {% set eventdate = config.start|date('M j') ~ ' – ' ~ config.end|date('M j, Y') %}
+            {% else %}
+              {% set eventdate = config.start|date('M j, Y') %}
             {% endif %}
-        {% endfor %}
 
-        {% set eventsstring = eventsstring ~ '</ul>' %}
-        {% if reg_counter is defined and reg_counter > 0 %}
-          {{ eventsstring }}
+            {% if config.link is defined %}
+              {% set eventtext = linkit(event.title, config.link) %}
+            {% else %}
+              {% set eventtext = event.title %}
+            {% endif %}
+
+            <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+
+          {% endfor %}
+
+          </ul>
+
         {% endif %}
 
       {% endfor %}
