@@ -3,73 +3,85 @@
 {% block content %}
     <h1>{{ page.title }}</h1>
     {{ page.content }}
-{% if config.plugins['simple-events'].use_regions %}
-  {% for reg_id,reg in config.plugins['simple-events'].regions %}
-    {% set eventsstring = '<h2 id="' ~ reg_id ~ '">' ~ reg ~ '</h2>' %}
-      {% set eventsstring = eventsstring ~ '<ul class="events">' %}
-      {% set events = page.collection() %}
-      {% set reg_counter = 0 %}
-      {% for e in events %}
-          {% if e.header.region == reg_id %}
-            {% set reg_counter = reg_counter + 1 %}
-            {% if e.header.end is defined and e.header.end != e.header.start %}
-              {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
+
+    {% if config.plugins['simple-events'].use_regions %}
+
+      {% for reg_id, reg in config.plugins['simple-events'].regions %}
+        {% set events = page.collection | filterEvents(reg_id) %}
+
+        {% if events.count > 0 %}
+          <h2 id="{{ reg_id }}">{{ reg }}</h2>
+          <ul class="events">
+
+          {% for event in events %}
+            {% set config = attribute(event.header, 'simple-events') %}
+
+            {% if config.end is defined and config.end != config.start %}
+              {% set eventdate = config.start|date('M j') ~ ' – ' ~ config.end|date('M j, Y') %}
             {% else %}
-              {% set eventdate = e.header.start|date('M j, Y') %}
+              {% set eventdate = config.start|date('M j, Y') %}
             {% endif %}
 
-            {% if e.header.link is defined %}
-              {% set eventtext = linkit(e.title, e.header.link) %}
+            {% if config.link is defined %}
+              {% set eventtext = linkit(event.title, config.link) %}
             {% else %}
-              {% set eventtext = e.title %}
+              {% set eventtext = event.title %}
             {% endif %}
-            {% set eventsstring = eventsstring ~ '<li><span class="eventdate">' ~ eventdate ~ '</span>' ~ eventtext ~ '</li>' %}
+
+            <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+
+          {% endfor %}
+
+          </ul>
+
+        {% endif %}
+
+      {% endfor %}
+
+    {% else %}
+        <ul class="events">
+        {% set events = page.collection() %}
+
+        {% for event in events %}
+          {% set config = attribute(event.header, 'simple-events') %}
+
+          {% if config.end is defined and config.end != config.start %}
+            {% set eventdate = config.start|date('M j') ~ ' – ' ~ config.end|date('M j, Y') %}
+          {% else %}
+            {% set eventdate = config.start|date('M j, Y') %}
           {% endif %}
-      {% endfor %}
-      {% set eventsstring = eventsstring ~ '</ul>' %}
-      {% if reg_counter is defined and reg_counter > 0 %}
-        {{ eventsstring }}
-      {% endif %}
-    {% endfor %}
-{% else %}
-    <ul class="events">
-    {% set events = page.collection() %}
-    {% for e in events %}
-      {% if e.header.end is defined and e.header.end != e.header.start %}
-        {% set eventdate = e.header.start|date('M j') ~ ' – ' ~ e.header.end|date('M j, Y') %}
-      {% else %}
-        {% set eventdate = e.header.start|date('M j, Y') %}
-      {% endif %}
 
-      {% if e.header.link is defined %}
-        {% set eventtext = linkit(e.title, e.header.link) %}
-      {% else %}
-        {% set eventtext = e.title %}
-      {% endif %}
-      <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
-      {% endfor %}
-    </ul>
-{% endif %}
+          {% if config.link is defined %}
+            {% set eventtext = linkit(event.title, config.link) %}
+          {% else %}
+            {% set eventtext = event.title %}
+          {% endif %}
+
+          <li><span class="eventdate">{{ eventdate }}</span>{{ eventtext }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
 {% endblock %}
 
 
 {# ----- customise the date for another language: an example in German ----- #}
 {#
-put this in the for loop (for e in events), replacing the if clause above:
+put this in the for loop (for event in events), replacing the if clause above:
 
-{% if e.header.end is defined and e.header.end != e.header.start %}
-  {% if e.header.end|date('j') == e.header.start|date('j') + 1 %}
+{% if config.end is defined and config.end != config.start %}
+  {% if config.end|date('j') == config.start|date('j') + 1 %}
     {% set month ="" %}
-    {% if e.header.end|date('m') != e.header.start|date('m') %}
-      {% set month = ' ' ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.start|date('n') -1) %}
+    {% if config.end|date('m') != config.start|date('m') %}
+      {% set month = ' ' ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(config.start|date('n') -1) %}
     {% endif %}
-    {% if e.header.end|date('j') == e.header.start|date('j') + 1 %}
-    {% set eventdate = e.header.start|date('j.') ~ month ~ ' und ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
+    {% if config.end|date('j') == config.start|date('j') + 1 %}
+    {% set eventdate = config.start|date('j.') ~ month ~ ' und ' ~ config.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(config.end|date('n') -1) ~ ' ' ~ config.end|date('Y') %}
     {% else %}
-    {% set eventdate = e.header.start|date('j.') ~ month ~ ' bis ' ~ e.header.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.end|date('n') -1) ~ ' ' ~ e.header.end|date('Y') %}
+    {% set eventdate = config.start|date('j.') ~ month ~ ' bis ' ~ config.end|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(config.end|date('n') -1) ~ ' ' ~ config.end|date('Y') %}
   {% endif %}
 {% else %}
-{% set eventdate = e.header.start|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(e.header.start|date('n') -1) ~ ' ' ~ e.header.start|date('Y') %}
+{% set eventdate = config.start|date('j. ') ~ 'GRAV.MONTHS_OF_THE_YEAR'|ta(config.start|date('n') -1) ~ ' ' ~ config.start|date('Y') %}
 {% endif %}
 
 #}

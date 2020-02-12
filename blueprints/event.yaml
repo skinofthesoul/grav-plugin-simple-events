@@ -24,30 +24,30 @@ form:
               type: conditional
               condition: config.plugins['simple-events'].use_links
               fields:
-                header.link:
+                header.simple-events.link:
                   type: select
                   label: PLUGIN_SIMPLE_EVENTS.LABEL_LINKTOPAGE
                   config-options@: plugins.simple-events.link_options
-            header.start:
+            header.simple-events.start:
               type: date
               label: PLUGIN_ADMIN.DATE
               validate:
                 required: true
-            header.end:
+            header.simple-events.end:
               type: date
               label: PLUGIN_SIMPLE_EVENTS.LABEL_ENDDATE
             opt-location:
               type: conditional
               condition: config.plugins['simple-events'].use_location
               fields:
-                header.location:
+                header.simple-events.location:
                   type: text
                   label: PLUGIN_SIMPLE_EVENTS.LABEL_LOCATION
             opt-region:
               type: conditional
               condition: config.plugins['simple-events'].use_regions
               fields:
-                header.region:
+                header.simple-events.region:
                   type: select
                   label: PLUGIN_SIMPLE_EVENTS.LABEL_REGIONS
                   config-options@: plugins.simple-events.regions
