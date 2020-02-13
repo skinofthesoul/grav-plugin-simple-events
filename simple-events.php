@@ -15,8 +15,6 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class SimpleEventsPlugin extends Plugin
 {
-    protected $clearEvents = false;
-    protected $checkUnpublishedDates = false;
     /**
      * @return array
      *
@@ -129,11 +127,18 @@ class SimpleEventsPlugin extends Plugin
         return $collection;
     }
 
-    /** Cleanup up expired events when page collection has been build */
-    public function onPagesInitialized()
+    /** Fired when Grav needs to refresh/build the cache */
+    public function onBuildPagesInitialized()
     {
-        if ($this->checkUnpublishedDates) {
-            $pages = $this->grav['pages'];
+        $this->enable([
+            'onPagesInitialized' => ['onPagesInitialized', 0],
+        ]);
+    }
+
+    /** Cleanup up expired events when page collection has been build */
+    public function onPagesInitialized(Event $event)
+    {
+        $pages = $event['pages'];
             $events = $pages->all()->ofType('event')->order('header.simple-events.start');
 
             foreach ($events as $event) {
@@ -162,25 +167,15 @@ class SimpleEventsPlugin extends Plugin
                     $event->save();
                 }
             }
-        }
 
-        if ($this->grav['config']->get('plugins.simple-events.delete_old') ?? false) {
             // clear out past events
-            if ($this->clearEvents) {
-                $pages = $this->grav['pages'];
-                $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
+        if ($this->config->get('plugins.simple-events.delete_old') === true) {
+            $nonPublishedEvents = $pages->all()->ofType('event')->nonPublished();
 
-                foreach ($unpublishedEvents as $event) {
-                    Folder::delete($event->path()); // !! may not work for multilang!!
-                }
-            }
+            foreach ($nonPublishedEvents as $event) {
+                // Event will be deleted for all langauges !!
+                Folder::delete($event->path());
         }
     }
-
-    /** Fired when Grav needs to refresh/build the cache */
-    public function onBuildPagesInitialized()
-    {
-        // $this->clearEvents = true;
-        $this->checkUnpublishedDates = true;
     }
 }
