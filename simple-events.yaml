@@ -1,1 +1,10 @@
 enabled: true
+delete_old: false
+unpublish_day: start
+unpublish_time: '00:00'
+use_location: false
+use_links: false
+link_options:
+  - PLUGIN_SIMPLE_EVENTS.NONE
+use_regions: false
+regions: null
