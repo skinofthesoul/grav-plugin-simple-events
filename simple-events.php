@@ -41,6 +41,7 @@ class SimpleEventsPlugin extends Plugin
             $this->enable([
                 'onGetPageTemplates'   => ['onGetPageTemplates', 0],
                 'onGetPageBlueprints'   => ['onGetPageBlueprints', 0],
+                'onAdminSave'   => ['onAdminSave', 0],
             ]);
             return;
         }
@@ -80,6 +81,28 @@ class SimpleEventsPlugin extends Plugin
         $types->scanBlueprints('plugin://' . $this->name . '/blueprints');
     }
 
+    public function onAdminSave(Event $event) {
+        if (! $event['object'] instanceof Page || $event['object']->template() !== 'events') {
+            return;
+        }
+
+        $page = $event['object'];
+        $header = $page->header();
+        $orderBy = $header->content['order']['by'];
+        $orderDir= $header->content['order']['dir'];
+
+        $header->content = [
+            'items' => '@self.children',
+            'order' => [
+                'by' => $orderBy,
+                'dir' => $orderDir,
+            ],
+            'filter' => [
+                'published' => true,
+                'type' => 'event',
+            ],
+        ];
+    }
     /**
      * Add templates to twig paths.
      */

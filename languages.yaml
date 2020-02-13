@@ -1,10 +1,16 @@
 en:
   PLUGIN_SIMPLE_EVENTS:
     ROUTES: Add routes on which Simple-Events should be activated
+    LABEL_ORDERBY: Order by
+    OPTION_START: Start day
+    OPTION_END: End day
+    LABEL_ORDERDIR: Direction
+    OPTION_ASC: Asc
+    OPTION_DESC: Desc
     DELETE_OLD: Delete past events automatically
     UNPUBLISH_DAY: On which day to unpublish an event
-    LABEL_START: start day
-    LABEL_END: end day (if given)
+    LABEL_START: Start day
+    LABEL_END: End day (if given)
     UNPUBLISH_TIME: At what time to unpublish an event
     USE_LOCATION: Show location field
     LABEL_LOCATION: Location
@@ -22,6 +28,12 @@ en:
 de:
   PLUGIN_SIMPLE_EVENTS:
     ROUTES: Fügen Sie Routen hinzu, auf denen Simple-Events aktiviert werden sollen
+    LABEL_ORDERBY: Sortieren nach
+    OPTION_START: Starttag
+    OPTION_END: Endtag
+    LABEL_END: Direction
+    OPTION_ASC: Aufsteigend
+    OPTION_DESC: Absteigend
     DELETE_OLD: Vergangene Termine automatisch löschen
     UNPUBLISH_DAY: An welchem Tag werden Termine aus der Liste genommen
     LABEL_START: Starttag
