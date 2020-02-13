@@ -1,5 +1,6 @@
 en:
   PLUGIN_SIMPLE_EVENTS:
+    ROUTES: Add routes on which Simple-Events should be activated
     DELETE_OLD: Delete past events automatically
     UNPUBLISH_DAY: On which day to unpublish an event
     LABEL_START: start day
@@ -20,6 +21,7 @@ en:
 
 de:
   PLUGIN_SIMPLE_EVENTS:
+    ROUTES: Fügen Sie Routen hinzu, auf denen Simple-Events aktiviert werden sollen
     DELETE_OLD: Vergangene Termine automatisch löschen
     UNPUBLISH_DAY: An welchem Tag werden Termine aus der Liste genommen
     LABEL_START: Starttag
