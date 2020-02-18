@@ -1,0 +1,40 @@
+title: Terminen
+'@extends':
+    type: default
+    context: blueprints://pages
+
+form:
+  fields:
+    tabs:
+      type: tabs
+      active: 1
+
+      fields:
+        termin:
+          type: tab
+          title: Terminen
+
+          fields:
+            header.title:
+              type: text
+              label: PLUGIN_ADMIN.TITLE
+              validate:
+                required: true
+            header.content.order.by:
+              type: select
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_ORDERBY
+              default: start
+              options:
+                start: PLUGIN_SIMPLE_EVENTS.OPTION_START
+                end: PLUGIN_SIMPLE_EVENTS.OPTION_END
+              validate:
+                type: string
+            header.content.order.dir:
+              type: select
+              label: PLUGIN_SIMPLE_EVENTS.LABEL_ORDERDIR
+              default: asc
+              options:
+                asc: PLUGIN_SIMPLE_EVENTS.OPTION_ASC
+                desc: PLUGIN_SIMPLE_EVENTS.OPTION_DESC
+              validate:
+                type: string

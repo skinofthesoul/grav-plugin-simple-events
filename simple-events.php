@@ -15,8 +15,6 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class SimpleEventsPlugin extends Plugin
 {
-    protected $clearEvents = false;
-    protected $checkUnpublishedDates = false;
     /**
      * @return array
      *
@@ -31,8 +29,6 @@ class SimpleEventsPlugin extends Plugin
     {
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
-            'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
-            'onGetPageTemplates'   => ['onGetPageTemplates', 0]
         ];
     }
 
@@ -42,31 +38,71 @@ class SimpleEventsPlugin extends Plugin
     public function onPluginsInitialized()
     {
         if ($this->isAdmin()) {
-            // enable the save event so past events can be deleted
             $this->enable([
-                //'onAdminSave'        => ['onAdminSave', 0]
+                'onGetPageTemplates'   => ['onGetPageTemplates', 0],
+                'onGetPageBlueprints'   => ['onGetPageBlueprints', 0],
+                'onAdminSave'   => ['onAdminSave', 0],
             ]);
+            return;
         }
 
-        // Enable the main event we are interested in
+        // Always enable event when pages need to be rebuild
         $this->enable([
             'onBuildPagesInitialized' => ['onBuildPagesInitialized', 0],
-            'onPagesInitialized' => ['onPagesInitialized', 0],
-            'onTwigInitialized' => ['onTwigInitialized', 0]
         ]);
+
+        // Only enable events when url of requested page is in array of routes
+        $url = $this->grav['uri']->url();
+        $routes = $this->config->get('plugins.simple-events.routes');
+
+        if ($routes && is_array($routes) && in_array($url, $routes)) {
+            $this->enable([
+                'onTwigInitialized' => ['onTwigInitialized', 0],
+                'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
+            ]);
+        }
     }
 
     /**
-     * Add blueprint directory to page templates.
+     * Add templates directory to page templates.
      */
     public function onGetPageTemplates(Event $event)
     {
         $types = $event->types;
-        $locator = Grav::instance()['locator'];
-        $types->scanBlueprints($locator->findResource('plugin://' . $this->name . '/blueprints'));
-        $types->scanTemplates($locator->findResource('plugin://' . $this->name . '/templates'));
+        $types->scanTemplates('plugin://' . $this->name . '/templates');
     }
 
+    /**
+     * Add blueprint directory to page blueprints.
+     */
+    public function onGetPageBlueprints(Event $event)
+    {
+        $types = $event->types;
+        $types->scanBlueprints('plugin://' . $this->name . '/blueprints');
+    }
+
+    public function onAdminSave(Event $event) {
+        if (! $event['object'] instanceof Page || $event['object']->template() !== 'events') {
+            return;
+        }
+
+        $page = $event['object'];
+        $header = $page->header();
+        $orderBy = $header->content['order']['by'];
+        $orderDir= $header->content['order']['dir'];
+
+        $header->content = [
+            'items' => '@self.children',
+            'order' => [
+                'by' => $orderBy,
+                'dir' => $orderDir,
+            ],
+            'filter' => [
+                'published' => true,
+                'type' => 'event',
+            ],
+        ];
+    }
     /**
      * Add templates to twig paths.
      */
@@ -129,58 +165,55 @@ class SimpleEventsPlugin extends Plugin
         return $collection;
     }
 
-    /** Cleanup up expired events when page collection has been build */
-    public function onPagesInitialized()
-    {
-        if ($this->checkUnpublishedDates) {
-            $pages = $this->grav['pages'];
-            $events = $pages->all()->ofType('event')->order('header.simple-events.start');
-
-            foreach ($events as $event) {
-                // Header must be copied before any other operation
-                $header = (array) $event->header();
-
-                $config = $this->mergeConfig($event);
-                $unpublishDay = $config->get('unpublish_day') ?? 'start';
-                $endTime = $config->get($unpublishDay);
-
-                if (is_int($endTime)) {
-                    $endTime = date('Y-m-d', $endTime);
-                } else {
-                    $tmp = strtotime($endTime);
-                    $endTime = date('Y-m-d', $tmp);
-                }
-
-                if (!empty($config->get('unpublish_time'))) {
-                    $endTime = $endTime . ' ' . $config->get('unpublish_time');
-                }
-
-                if (!isset($header['unpublish_date']) || $header['unpublish_date'] !== $endTime) {
-                    $header['unpublish_date'] = $endTime;
-                    $event->header($header);
-                    $event->published(new \DateTime('now') <= new \DateTime($endTime));
-                    $event->save();
-                }
-            }
-        }
-
-        if ($this->grav['config']->get('plugins.simple-events.delete_old') ?? false) {
-            // clear out past events
-            if ($this->clearEvents) {
-                $pages = $this->grav['pages'];
-                $unpublishedEvents = $pages->all()->ofType('event')->nonPublished();
-
-                foreach ($unpublishedEvents as $event) {
-                    Folder::delete($event->path()); // !! may not work for multilang!!
-                }
-            }
-        }
-    }
-
     /** Fired when Grav needs to refresh/build the cache */
     public function onBuildPagesInitialized()
     {
-        // $this->clearEvents = true;
-        $this->checkUnpublishedDates = true;
+        $this->enable([
+            'onPagesInitialized' => ['onPagesInitialized', 0],
+        ]);
+    }
+
+    /** Cleanup up expired events when page collection has been build */
+    public function onPagesInitialized(Event $event)
+    {
+        $pages = $event['pages'];
+        $events = $pages->all()->ofType('event')->order('header.simple-events.start');
+
+        foreach ($events as $event) {
+            // Header must be copied before any other operation
+            $header = (array) $event->header();
+
+            $config = $this->mergeConfig($event);
+            $unpublishDay = $config->get('unpublish_day') ?? 'start';
+            $endTime = $config->get($unpublishDay);
+
+            if (is_int($endTime)) {
+                $endTime = date('Y-m-d', $endTime);
+            } else {
+                $tmp = strtotime($endTime);
+                $endTime = date('Y-m-d', $tmp);
+            }
+
+            if (!empty($config->get('unpublish_time'))) {
+                $endTime = $endTime . ' ' . $config->get('unpublish_time');
+            }
+
+            if (!isset($header['unpublish_date']) || $header['unpublish_date'] !== $endTime) {
+                $header['unpublish_date'] = $endTime;
+                $event->header($header);
+                $event->published(new \DateTime('now') <= new \DateTime($endTime));
+                $event->save();
+            }
+        }
+
+        // clear out past events
+        if ($this->config->get('plugins.simple-events.delete_old') === true) {
+            $nonPublishedEvents = $pages->all()->ofType('event')->nonPublished();
+
+            foreach ($nonPublishedEvents as $event) {
+                // Event will be deleted for all langauges !!
+                Folder::delete($event->path());
+            }
+        }
     }
 }

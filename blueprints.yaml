@@ -24,6 +24,13 @@ form:
         0: PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
+    routes:
+      type: array
+      label: Routes
+      help: PLUGIN_SIMPLE_EVENTS.ROUTES
+      required: true
+      default: []
+      value_only: true
     delete_old:
       label: PLUGIN_SIMPLE_EVENTS.DELETE_OLD
       type: toggle
