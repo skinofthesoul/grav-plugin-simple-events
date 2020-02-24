@@ -56,6 +56,7 @@ class SimpleEventsPlugin extends Plugin
         $routes = $this->config->get('plugins.simple-events.routes');
 
         //if ($routes && is_array($routes) && in_array($url, $routes)) {
+        // this causes difficulties with multilingual events pages that have different slugs set for each language!
             $this->enable([
                 'onTwigInitialized' => ['onTwigInitialized', 0],
                 'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
