@@ -39,9 +39,9 @@ class SimpleEventsPlugin extends Plugin
     {
         if ($this->isAdmin()) {
             $this->enable([
-                'onGetPageTemplates'   => ['onGetPageTemplates', 0],
+                'onGetPageTemplates'    => ['onGetPageTemplates', 0],
                 'onGetPageBlueprints'   => ['onGetPageBlueprints', 0],
-                'onAdminSave'   => ['onAdminSave', 0],
+                'onAdminSave'           => ['onAdminSave', 0],
             ]);
             return;
         }
@@ -51,16 +51,16 @@ class SimpleEventsPlugin extends Plugin
             'onBuildPagesInitialized' => ['onBuildPagesInitialized', 0],
         ]);
 
-        // Only enable events when url of requested page is in array of routes
-        $url = $this->grav['uri']->url();
+        // Only enable events when path of requested page is in array of routes
+        $url = $this->grav['uri']->path();
         $routes = $this->config->get('plugins.simple-events.routes');
 
-        if ($routes && is_array($routes) && in_array($url, $routes)) {
+        //if ($routes && is_array($routes) && in_array($url, $routes)) {
             $this->enable([
                 'onTwigInitialized' => ['onTwigInitialized', 0],
                 'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
             ]);
-        }
+        //}
     }
 
     /**
@@ -211,7 +211,7 @@ class SimpleEventsPlugin extends Plugin
             $nonPublishedEvents = $pages->all()->ofType('event')->nonPublished();
 
             foreach ($nonPublishedEvents as $event) {
-                // Event will be deleted for all langauges !!
+                // Event will be deleted for all languages !!
                 Folder::delete($event->path());
             }
         }

@@ -34,10 +34,16 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
+routes: null
 delete_old: false # enable to delete past events automatically
+unpublish_day: start
+unpublish_time: '00:00'
 use_location: false # shows an extra text field in admin for use in templates
 use_links: false # turn on options in admin to add a link to (part of) the title
+link_options:
+  - PLUGIN_SIMPLE_EVENTS.NONE
 use_regions: false # enable to group events in the list by regions
+regions: null
 # see below on how to configure links and regions
 ```
 
@@ -59,15 +65,17 @@ content:
       type: 'event'
 ```
 
+Note that if you use the Admin plugin, you will find the ordering options under the Events tab of that page, and the collection will be created for you upon saving.
+
 ### Changing the appearance
 You can (and probably want to) modify the appearance of the list by copying
-`user/plugins/simple-events/templates/events.html.twig` to `[theme folder]/templates/events.html.twig`, and then making any changes in that copy. I have included some code to help with making the dates multilingual, if you can't make something work, feel free to create am issue for the plugin!
+`user/plugins/simple-events/templates/events.html.twig` to `[theme folder]/templates/events.html.twig`, and then making any changes in that copy. I have included some code to help with making the dates multilingual, if you can't make something work, feel free to create an issue for the plugin!
 
 ### Optional fields: end dates, regions, location and links
 If you just want a very simple list of events, the end date, regions, location and link fields of the `Event` page type are completely optional. If you would like to use any of these, turn them on in the plugin options (see above). The location field is really just a text field that you can use for any information you'd like to style differently in your template, it does not have to be a location (but this is likely to see a lot of use). For links and regions, additional configuration is needed.
 
 ### Configuring links
-If you wish to be able to link your event text or a part of it to another page or another website via Admin, make a list of available links under the plugin's configuration options or in the config file like so:
+If you wish to be able to link your event text or a part of it to another page or another website, make a list of available links under the plugin's configuration options or directly in the config file like so:
 
 ``` yaml
 link_options:
@@ -79,7 +87,7 @@ link_options:
 You can then put part of your event text in square brackets [] and select what you wish to link this to. (This is an option I made for my clients, if you can create links in all the regular ways, you will likely not need this.)
 
 ### Configuring regions
-You can sort your events into regions if you like: just create a list of regions in the plugin settings and enable the regions (if you use the Admin plugin), or put an array into your `user/config/plugins/simple-events.yaml` like so:
+You can sort your events into regions if you like: just create a list of regions in the plugin settings and enable the regions (in Admin), or put an array into your `user/config/plugins/simple-events.yaml` like so:
 
 ``` yaml
 regions:
@@ -104,10 +112,11 @@ You can also add taxonomy tags to your events and then use them in the page coll
 
 This plugin was initially sponsored by a German nonprofit organisation. As soon as the English version of their website is online, I shall link them here!
 
+I would also like to thank @pamtbaau, whose expertise has greatly contributed to this plugin.
+
 ## To Do
 
-- [ ] add option to delete past events (or do it automatically)
-- [ ] make use of Grav's built-in unpublish_date field
-- [ ] maybe add a simpler way to create new events in Admin
+- [x] add option to delete past events (or do it automatically)
+- [x] make use of Grav's built-in unpublish_date field
 - [x] support for categories in events template
 - [x] support for types in events template

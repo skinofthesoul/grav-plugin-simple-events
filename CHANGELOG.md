@@ -1,3 +1,12 @@
+# v1.3
+##  02/24/2020
+1. [](#new)
+    * added option to delete past events automatically
+2. [](#improved)
+    * Admin will now create a page collection for you upon saving an `Events` page
+    * extra `Events` tab with sorting settings for the collection    
+    * updated README file
+
 # v1.2.1
 ##  01/27/2020
 1. [](#bugfix)

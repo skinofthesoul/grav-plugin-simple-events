@@ -12,7 +12,7 @@ form:
       fields:
         termin:
           type: tab
-          title: Terminen
+          title: PLUGIN_SIMPLE_EVENTS.EVENTS
 
           fields:
             header.title:

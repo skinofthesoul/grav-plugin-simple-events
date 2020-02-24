@@ -1,6 +1,7 @@
 en:
   PLUGIN_SIMPLE_EVENTS:
-    ROUTES: Add routes on which Simple-Events should be activated
+    EVENTS: Events
+    ROUTES: Routes to events page(s)
     LABEL_ORDERBY: Order by
     OPTION_START: Start day
     OPTION_END: End day
@@ -27,11 +28,12 @@ en:
 
 de:
   PLUGIN_SIMPLE_EVENTS:
-    ROUTES: Fügen Sie Routen hinzu, auf denen Simple-Events aktiviert werden sollen
+    EVENTS: Termine
+    ROUTES: Seite(n) mit den Terminlisten
     LABEL_ORDERBY: Sortieren nach
     OPTION_START: Starttag
     OPTION_END: Endtag
-    LABEL_END: Direction
+    LABEL_ORDERDIR: Sortierrichtung
     OPTION_ASC: Aufsteigend
     OPTION_DESC: Absteigend
     DELETE_OLD: Vergangene Termine automatisch löschen
