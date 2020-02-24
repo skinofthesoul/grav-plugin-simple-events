@@ -46,21 +46,11 @@ class SimpleEventsPlugin extends Plugin
             return;
         }
 
-        // Always enable event when pages need to be rebuild
         $this->enable([
             'onBuildPagesInitialized' => ['onBuildPagesInitialized', 0],
+            'onTwigInitialized'       => ['onTwigInitialized', 0],
+            'onTwigTemplatePaths'     => ['onTwigTemplatePaths', 0],
         ]);
-
-        // Only enable events when path of requested page is in array of routes
-        $url = $this->grav['uri']->path();
-        $routes = $this->config->get('plugins.simple-events.routes');
-
-        //if ($routes && is_array($routes) && in_array($url, $routes)) {
-            $this->enable([
-                'onTwigInitialized' => ['onTwigInitialized', 0],
-                'onTwigTemplatePaths'  => ['onTwigTemplatePaths', 0],
-            ]);
-        //}
     }
 
     /**
