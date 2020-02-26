@@ -163,7 +163,7 @@ class SimpleEventsPlugin extends Plugin
         ]);
     }
 
-    /** Cleanup up expired events when page collection has been build */
+    /** Cleanup up expired events when page collection has been build and restructure frontmatter */
     public function onPagesInitialized(Event $event)
     {
         $pages = $event['pages'];
@@ -173,9 +173,32 @@ class SimpleEventsPlugin extends Plugin
             // Header must be copied before any other operation
             $header = (array) $event->header();
 
+            // check header structure
+            if (!isset($header['simple-events'])) {
+              if (isset($header['start'])) {
+                $header['simple-events']['start'] = $header['start'];
+                unset($header['start']);
+              }
+              if (isset($header['end'])) {
+                $header['simple-events']['end'] = $header['end'];
+                unset($header['end']);
+              }
+              if (isset($header['link'])) {
+                $header['simple-events']['link'] = $header['link'];
+                unset($header['link']);
+              }
+              if (isset($header['region'])) {
+                $header['simple-events']['region'] = $header['region'];
+                unset($header['region']);
+              }
+            }
+            $event->header($header);
+            $event->save();
+
+            $header = (array) $event->header();
             $config = $this->mergeConfig($event);
             $unpublishDay = $config->get('unpublish_day') ?? 'start';
-            $endTime = $config->get($unpublishDay);
+            $endTime = $config->get($unpublishDay) ?? $config->get('start');
 
             if (is_int($endTime)) {
                 $endTime = date('Y-m-d', $endTime);

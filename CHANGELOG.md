@@ -1,3 +1,8 @@
+# v1.3.1
+##  02/26/2020
+1. [](#bugfix)
+    * automatically restructure every event's frontmatter to fit the new format
+
 # v1.3
 ##  02/24/2020
 1. [](#new)
