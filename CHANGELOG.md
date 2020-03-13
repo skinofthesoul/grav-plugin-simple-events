@@ -1,3 +1,9 @@
+# v1.3.2
+##  03/13/2020
+1. [](#bugfix)
+    * fixed blueprint default to correct sorting by date
+    * fixed typo in `eventslist.html.twig`
+
 # v1.3.1
 ##  02/26/2020
 1. [](#bugfix)

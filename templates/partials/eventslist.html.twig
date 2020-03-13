@@ -2,7 +2,7 @@
 
 <ul class="termine">
   {% for event in events %}
-    {% config = attribute(event.header, 'simple-events') %}
+    {% set config = attribute(event.header, 'simple-events') %}
 
     {% if date(config.start) > date() %}
       {% if config.end is defined and config.end != config.start %}
