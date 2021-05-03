@@ -9,6 +9,7 @@ en:
     OPTION_ASC: Asc
     OPTION_DESC: Desc
     DELETE_OLD: Delete past events automatically
+    UNPUBLISH_OLD: Unpublish past events automatically
     UNPUBLISH_DAY: On which day to unpublish an event
     LABEL_START: Start day
     LABEL_END: End day (if given)
@@ -37,6 +38,7 @@ de:
     OPTION_ASC: Aufsteigend
     OPTION_DESC: Absteigend
     DELETE_OLD: Vergangene Termine automatisch löschen
+    UNPUBLISH_OLD: Vergangene Termine automatisch aus der Liste nehmen
     UNPUBLISH_DAY: An welchem Tag werden Termine aus der Liste genommen
     LABEL_START: Starttag
     LABEL_END: Endtag (sofern angegeben)

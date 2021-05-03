@@ -2,8 +2,10 @@
 
 {% block content %}
     <h1>{{ page.title }}</h1>
-    {{ page.content }}
+    {{ page.content|raw }}
 
+    {% set events = page.collection | sortAsCalendar() %}
+    {{ dump(events) }}
     {% if config.plugins['simple-events'].use_regions %}
 
       {% for reg_id, reg in config.plugins['simple-events'].regions %}

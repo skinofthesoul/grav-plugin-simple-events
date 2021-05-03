@@ -41,6 +41,16 @@ form:
         0: PLUGIN_ADMIN.NO
       validate:
         type: bool
+    unpublish_old:
+      label: PLUGIN_SIMPLE_EVENTS.UNPUBLISH_OLD
+      type: toggle
+      highlight: 1
+      default: 0
+      options:
+        1: PLUGIN_ADMIN.YES
+        0: PLUGIN_ADMIN.NO
+      validate:
+        type: bool
     unpublish_day:
       label: PLUGIN_SIMPLE_EVENTS.UNPUBLISH_DAY
       type: radio
@@ -76,7 +86,7 @@ form:
       type: array
       label: PLUGIN_SIMPLE_EVENTS.LINK_OPTIONS
       default:
-        '': 'PLUGIN_SIMPLE_EVENTS.NONE'
+        '': PLUGIN_SIMPLE_EVENTS.NONE
     use_regions:
       label: PLUGIN_SIMPLE_EVENTS.USE_REGIONS
       type: toggle

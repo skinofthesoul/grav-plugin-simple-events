@@ -1,3 +1,11 @@
+# v1.4
+##  05/03/2021
+1. [](#new)
+    * added option to show past events
+2. [](#bugfix)
+    * added raw filter to template output
+    * fixed language string in Admin settings
+
 # v1.3.2
 ##  03/13/2020
 1. [](#bugfix)
