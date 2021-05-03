@@ -197,25 +197,28 @@ class SimpleEventsPlugin extends Plugin
 
             $header = (array) $event->header();
             $config = $this->mergeConfig($event);
-            $unpublishDay = $config->get('unpublish_day') ?? 'start';
-            $endTime = $config->get($unpublishDay) ?? $config->get('start');
+            // unpublish?
+            if ($config->get('unpublish_old')) {
+                $unpublishDay = $config->get('unpublish_day') ?? 'start';
+                $endTime = $config->get($unpublishDay) ?? $config->get('start');
 
-            if (is_int($endTime)) {
-                $endTime = date('Y-m-d', $endTime);
-            } else {
-                $tmp = strtotime($endTime);
-                $endTime = date('Y-m-d', $tmp);
-            }
+                if (is_int($endTime)) {
+                    $endTime = date('Y-m-d', $endTime);
+                } else {
+                    $tmp = strtotime($endTime);
+                    $endTime = date('Y-m-d', $tmp);
+                }
 
-            if (!empty($config->get('unpublish_time'))) {
-                $endTime = $endTime . ' ' . $config->get('unpublish_time');
-            }
+                if (!empty($config->get('unpublish_time'))) {
+                    $endTime = $endTime . ' ' . $config->get('unpublish_time');
+                }
 
-            if (!isset($header['unpublish_date']) || $header['unpublish_date'] !== $endTime) {
-                $header['unpublish_date'] = $endTime;
-                $event->header($header);
-                $event->published(new \DateTime('now') <= new \DateTime($endTime));
-                $event->save();
+                if (!isset($header['unpublish_date']) || $header['unpublish_date'] !== $endTime) {
+                    $header['unpublish_date'] = $endTime;
+                    $event->header($header);
+                    $event->published(new \DateTime('now') <= new \DateTime($endTime));
+                    $event->save();
+                }
             }
         }
 

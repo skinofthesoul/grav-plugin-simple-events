@@ -34,8 +34,8 @@ Here is the default configuration and an explanation of available options:
 
 ```yaml
 enabled: true
-routes: null
 delete_old: false # enable to delete past events automatically
+unpublish_old: true # disable to keep past events in your list
 unpublish_day: start
 unpublish_time: '00:00'
 use_location: false # shows an extra text field in admin for use in templates

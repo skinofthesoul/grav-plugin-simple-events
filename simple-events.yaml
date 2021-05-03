@@ -1,6 +1,6 @@
 enabled: true
-routes: null
 delete_old: false
+unpublish_old: true
 unpublish_day: start
 unpublish_time: '00:00'
 use_location: false
