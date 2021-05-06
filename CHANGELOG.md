@@ -1,3 +1,9 @@
+# v1.4.1
+##  05/06/2021
+
+1. [](#improved)
+    * removed redundant content tab
+
 # v1.4
 ##  05/03/2021
 1. [](#new)

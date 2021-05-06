@@ -10,9 +10,12 @@ form:
       active: 1
 
       fields:
+        content:
+          unset@: true
         termin:
           type: tab
           title: Termin
+          ordering@: -2
 
           fields:
             header.title:
